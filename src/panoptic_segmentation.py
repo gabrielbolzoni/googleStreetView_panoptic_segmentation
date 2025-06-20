@@ -1,5 +1,4 @@
 import torch
-import matplotlib.pyplot as plt
 from transformers import OneFormerProcessor, OneFormerForUniversalSegmentation
 from PIL import Image
 from collections import defaultdict

@@ -2,7 +2,7 @@ import requests
 import os
 import pandas as pd
 from pathlib import Path
-import sys
+
 
 # -------------------- Função para importar coordenadas --------------------
 def import_coordinates(mainFolder_path: str):
@@ -42,17 +42,4 @@ def get_streetview_images(coordinates_dict, api_key, fov=90, pitch=0):
             else:
                 print(f"Erro ao baixar imagem ({bairro} - {idx}): {response.status_code}")
 
-# -------------------- Execução principal via terminal --------------------
-if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Uso: python streetview_downloader.py <caminho_da_pasta_csv> <caminho_do_arquivo_api_key>")
-        sys.exit(1)
 
-    pasta_csv = sys.argv[1]
-    caminho_api_key = sys.argv[2]
-
-    with open(caminho_api_key, 'r') as f:
-        api_key = f.read().strip()
-
-    coords_dict = import_coordinates(pasta_csv)
-    get_streetview_images(coords_dict, api_key)
