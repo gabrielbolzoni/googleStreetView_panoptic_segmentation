@@ -9,26 +9,9 @@ import json
 import os
 import pandas as pd
 
-
-
 # Carregar o modelo e o processador
 processor = OneFormerProcessor.from_pretrained("shi-labs/oneformer_ade20k_swin_large")
 model = OneFormerForUniversalSegmentation.from_pretrained("shi-labs/oneformer_ade20k_swin_large")
-
-# Criar função para plotar segmentação
-def plot_segmentation(image, segmentation_map, title):
-    plt.figure(figsize=(10, 5))
-    plt.subplot(1, 2, 1)
-    plt.imshow(image)
-    plt.axis("off")
-    plt.title("Imagem Original")
-
-    plt.subplot(1, 2, 2)
-    plt.imshow(segmentation_map, cmap="jet", alpha=0.6)  # Mapa de segmentação sobreposto
-    plt.axis("off")
-    plt.title(title)
-    plt.show()
-
 
 def generate_results(streetView_images_folder):
     proporcoes_list = []
@@ -49,13 +32,11 @@ def generate_results(streetView_images_folder):
             panoptic_outputs, target_sizes=[image.size[::-1]]
         )[0]
 
-        proporcao_por_classe, contagem_por_classe, prop_veg, prop_cons, prop_rural = calculate_image_metrics(panoptic_result)
+        proporcao_por_classe, contagem_por_classe, prop_veg = calculate_image_metrics(panoptic_result)
 
         # Dict para proporções
         proporcao_row = {label_id: proporcao for label_id, proporcao in proporcao_por_classe.items()}
         proporcao_row["proporcao_vegetacao"] = prop_veg
-        proporcao_row["proporcao_construcao"] = prop_cons
-        proporcao_row["proporcao_areaRural"] = prop_rural
         proporcao_row["imagem"] = filename
         proporcoes_list.append(proporcao_row)
 
@@ -68,7 +49,6 @@ def generate_results(streetView_images_folder):
     df_proporcoes = pd.DataFrame(proporcoes_list).set_index("imagem").fillna(0)
     df_contagens = pd.DataFrame(contagens_list).set_index("imagem").fillna(0)
     
-
     return export_results(df_proporcoes,df_contagens)
 
 def calculate_image_metrics(panoptic_segmentation):
@@ -92,7 +72,7 @@ def export_results(df_proporcoes,df_contagens):
     df_proporcoes["Bairro"] = df_proporcoes.index.str.split("_").str[0]
     df_contagens["Bairro"] = df_contagens.index.str.split("_").str[0]
 
-    with open("class_label_traducao.json", "r", encoding="utf-8") as f:
+    with open("src/class_label_traducao.json", "r", encoding="utf-8") as f:
         id_traducao = json.load(f)
 
     label_traducao_int = {int(k): v for k, v in id_traducao.items()}
@@ -102,8 +82,9 @@ def export_results(df_proporcoes,df_contagens):
     
     # Output final de contagens
     df_contagem_completo = df_contagens.rename(columns=label_traducao_int)
+    df_contagem_completo.groupby("Bairro")[["carro","pessoa"]].sum().to_csv("results/trafegoCirculacao.csv")
+    df_contagem_completo.groupby("Bairro")[["poste","placa","poste de luz"]].sum().to_csv("results/infraUrbana.csv")
     df_contagem_completo.to_csv('results/resultadosContagem.csv')
     return 
 
-generate_results("data/streetView_images")
 
