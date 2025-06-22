@@ -14,6 +14,7 @@ def import_coordinates(mainFolder_path: str):
         neighborhood_name = file.stem
         coordinates_list = df[["longitude", "latitude"]].values.tolist()
         coodinates_dict[neighborhood_name] = coordinates_list
+    print("Coordenadas identificadas.")
     return coodinates_dict
 
 # -------------------- Função para baixar imagens --------------------
@@ -38,8 +39,8 @@ def get_streetview_images(coordinates_dict, api_key, fov=90, pitch=0):
             if response.status_code == 200:
                 with open(output_path, 'wb') as file:
                     file.write(response.content)
-                print(f"Imagem salva em: {output_path}")
+                print(f"Imagem salva: {bairro}_{idx} ")
             else:
                 print(f"Erro ao baixar imagem ({bairro} - {idx}): {response.status_code}")
-
+    print("Imagens baixadas.")
 
