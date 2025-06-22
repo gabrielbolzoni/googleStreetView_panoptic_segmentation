@@ -1,3 +1,4 @@
 config.txt
 *.csv
 .env
+*.jpg
