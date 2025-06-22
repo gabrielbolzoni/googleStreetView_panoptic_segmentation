@@ -23,11 +23,21 @@ Right-click the folder where you want the project to be saved and select:
 
 2. **Paste the following commands**  
 ```bash
-git clone https://github.com/gabrielbolzoni/googleStreetView_panoptic_segmentation.git
+git clone https://github.com/gabrielbolzoni/googleStreetView_panoptic_segmentation.git #Clone the repository from GitHub
 ```
 ```bash
-cd googleStreetView_panoptic_segmentation
+cd googleStreetView_panoptic_segmentation #Navigate to the project folder
 ```
+```bash
+python -m venv venv #Create the virtual environment
+```
+```bash
+.\venv\Scripts\Activate #Activate the virtual environment (Windows)
+```
+```bash
+pip install -r requirements.txt #Install dependencies
+```
+
    
 ## 🚀 Project Pipeline
 
@@ -75,22 +85,12 @@ YOUR_GOOGLE_API_KEY
 
 ---
 
-### 4️⃣ Install Dependencies
-
-Install all required packages using the `requirements.txt` file:
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-### 5️⃣ Run the Pipeline
+### 4️⃣ Run the Pipeline
 
 Execute the pipeline with the following command:
 
 ```bash
-python 
+python run_segmentation.py config.txt
 ```
 
 > This will download the images and apply the panoptic segmentation model.
