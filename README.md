@@ -61,8 +61,8 @@ id;longitude,latitude
 1;-51.2301,-30.0346
 2;-51.2305,-30.0349
 ```
+The file's name will be used to reference the image saved for each coordinate point. So if the file is called "area_A.csv", the images will be named as area_A_1, area_A_2 and so on. Keep that in mind in order to locate the files.
 
----
 
 ### 2️⃣ Get Your Google Street View API Key
 
@@ -75,7 +75,7 @@ Follow this official guide to create your API key:
 
 ### 3️⃣ Create the Configuration File
 
-Save your API key in a text file named `config.txt` in the project root folder.
+Save your API key in a txt file named `config` in the project root folder.
 
 **Example content of `config.txt`:**
 
