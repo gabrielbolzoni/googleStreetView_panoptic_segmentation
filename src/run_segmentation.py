@@ -1,7 +1,7 @@
 import sys
 import os
-from streetview_downloader import import_coordinates,get_streetview_images
-from panoptic_segmentation import generate_results
+from src.streetview_downloader import import_coordinates,get_streetview_images
+from src.panoptic_segmentation import generate_results
 
 # -------------------- Execução principal via terminal --------------------
 if __name__ == "__main__":
@@ -19,4 +19,4 @@ if __name__ == "__main__":
     get_streetview_images(coords_dict, api_key)
     generate_results("data/streetView_images")
 
-    print("Segmentação concluída com sucesso! Resultados gerados na pasta results")
+    
