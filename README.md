@@ -9,7 +9,26 @@ The repository contains code to:
 2. Apply a panoptic segmentation model to extract information about urban objects.
 
 ---
+## ⚠️ How to Set Up the Project
 
+Follow the steps below to set up the project on your local machine:
+
+---
+
+### 🔗 Clone the repository
+
+1. **Open PowerShell**  
+Right-click the folder where you want the project to be saved and select:  
+**"Open in Terminal"** or **"Open PowerShell window here"**.
+
+2. **Paste the following commands**  
+```bash
+git clone https://github.com/gabrielbolzoni/googleStreetView_panoptic_segmentation.git
+```
+```bash
+cd googleStreetView_panoptic_segmentation
+```
+   
 ## 🚀 Project Pipeline
 
 ### 1️⃣ Create the Raw Data Folder
@@ -71,46 +90,73 @@ pip install -r requirements.txt
 Execute the pipeline with the following command:
 
 ```bash
-python init.py
+python 
 ```
 
 > This will download the images and apply the panoptic segmentation model.
 
 ---
 
-## 📂 Output Files
+## 📂 Output File
 
-The results will be saved in the `results/` folder, including the following CSV files:
-
-- **`resultadosContagem.csv`**  
-  ➝ Contains, for each image, the **count of instances per class**.
-
-- **`resultadosProp.csv`**  
-  ➝ Contains, for each image, the **area proportion (%) occupied by each class** relative to the total image area.
+The results will be saved in a single Excel file called **`results.xlsx`**, located in the `results/` folder. This file contains **7 sheets**, each presenting a different aspect of the analysis:
 
 ---
+
+### 🔸 General Results
+
+- **`Resultados Contagem`**  
+  ➝ For each image, shows the **count of instances per class**.
+
+- **`Resultados Prop`**  
+  ➝ For each image, shows the **area proportion (%) occupied by each class**, relative to the total image area.
+
+---
+
+### 🔸 Area Proportion Comparisons
+
+- **`Verticalidade`**  
+  ➝ For each image, presents the **proportion between buildings and sky**, useful for evaluating vertical urban density or openness.
+
+- **`Infra deslocamento`**  
+  ➝ For each image, presents the **proportion between roads and sidewalks**, providing insights into mobility infrastructure.
+
+- **`Área Verde`**  
+  ➝ For each image, shows the **proportion of green areas**, including vegetation-related classes.
+
+---
+
+### 🔸 Neighbourhood Results
+
+- **`Tráfego e circulação`**  
+  ➝ For each neighbourhood, shows the **total number of cars and people identified**, reflecting urban flow and circulation.
+
+- **`Infra urbana`**  
+  ➝ For each neighbourhood, shows the **total number of poles, signs, and street lamps identified**, indicating aspects of public urban infrastructure.
+
+---
+
 
 ## 🗺️ Folder Structure
 
 ```
 streetview_segmentation_project/
 │
-├── data/
-│   └── coordinates/       # Folder for input CSV with coordinates
+├── data/                         
+│   ├── coordinates/               # CSV file(s) with the coordinates
+│   └── streetView_images/         # GSV images downloaded
 │
-├── results/                # Folder with output CSV files
+├── results/                       # Final output folder
 │
-├── config.txt              # File with your Google API key
-├── requirements.txt        # Python dependencies
-├── init.py                 # Main script to run the pipeline
+├── src/                            
+│   ├── class_label_traducao.json  
+│   ├── panoptic_segmentation.py   # Script to apply the panoptic segmentation model
+│   ├── streetview_download.py     # Script to download GSV images via API
+│   └── run_segmentation.py        # Main script to run the pipeline 
 │
-└── README.md               # Project documentation
+├── .gitignore                     
+├── config.txt                     # API key
+├── README.md                      # Project documentation
+├── requirements.txt               # Required packages
 ```
 
----
-
-## 📑 License
-
-This project is licensed under the MIT License.
-
----
