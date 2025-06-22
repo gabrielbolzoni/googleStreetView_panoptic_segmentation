@@ -76,14 +76,25 @@ def export_results(df_proporcoes,df_contagens):
 
     label_traducao_int = {int(k): v for k, v in id_traducao.items()}
     # Output final de proporções
-    df_prop_completo = df_proporcoes.rename(columns=label_traducao_int)
-    df_prop_completo.to_csv('results/resultadosProp.csv')
+    df_prop_completo = df_proporcoes.rename(columns=label_traducao_int) #.to_csv('results/resultadosProp.csv')
+    verticalidade = df_prop_completo.groupby("Bairro")[["predio", "ceu"]].mean().reset_index()
+    infraDesloc = df_prop_completo.groupby("Bairro")[["estrada", "calçada"]].mean().reset_index()
+    areaVerde = df_prop_completo.groupby("Bairro")[["árvore", "grama", "planta", "palmeira"]].mean().reset_index()
     
     # Output final de contagens
-    df_contagem_completo = df_contagens.rename(columns=label_traducao_int)
-    df_contagem_completo.groupby("Bairro")[["carro","pessoa"]].sum().to_csv("results/trafegoCirculacao.csv")
-    df_contagem_completo.groupby("Bairro")[["poste","placa","poste de luz"]].sum().to_csv("results/infraUrbana.csv")
-    df_contagem_completo.to_csv('results/resultadosContagem.csv')
+    df_contagem_completo = df_contagens.rename(columns=label_traducao_int) #.to_csv('results/resultadosContagem.csv')
+    trafegoCirculacao = df_contagem_completo.groupby("Bairro")[["carro", "pessoa"]].sum().reset_index()
+    infraUrbana = df_contagem_completo.groupby("Bairro")[["poste", "placa", "poste de luz"]].sum().reset_index()
+
+    with pd.ExcelWriter('results/results.xlsx', engine='xlsxwriter') as writer:
+        df_contagem_completo.to_excel(writer, sheet_name='Resultados Contagem', index=False)
+        df_prop_completo.to_excel(writer, sheet_name='Resultados Prop', index=False)
+        verticalidade.to_excel(writer, sheet_name='Verticalidade', index=False)
+        infraDesloc.to_excel(writer, sheet_name='Infra deslocamento', index=False)
+        areaVerde.to_excel(writer, sheet_name='Área Verde', index=False)
+        trafegoCirculacao.to_excel(writer, sheet_name='Tráfego e circulação', index=False)
+        infraUrbana.to_excel(writer, sheet_name='Infra urbana', index=False)
     return 
+
 
 
