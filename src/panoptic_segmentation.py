@@ -31,11 +31,10 @@ def generate_results(streetView_images_folder):
             panoptic_outputs, target_sizes=[image.size[::-1]]
         )[0]
 
-        proporcao_por_classe, contagem_por_classe, prop_veg = calculate_image_metrics(panoptic_result)
+        proporcao_por_classe, contagem_por_classe = calculate_image_metrics(panoptic_result)
 
         # Dict para proporções
         proporcao_row = {label_id: proporcao for label_id, proporcao in proporcao_por_classe.items()}
-        proporcao_row["proporcao_vegetacao"] = prop_veg
         proporcao_row["imagem"] = filename
         proporcoes_list.append(proporcao_row)
 
@@ -43,6 +42,7 @@ def generate_results(streetView_images_folder):
         contagem_row = {label_id: contagem for label_id, contagem in contagem_por_classe.items()}
         contagem_row["imagem"] = filename
         contagens_list.append(contagem_row)
+        print(f"Imagem {filename} segmentada")
 
     # Criar os DataFrames e definir "imagem" como índice
     df_proporcoes = pd.DataFrame(proporcoes_list).set_index("imagem").fillna(0)
@@ -62,10 +62,7 @@ def calculate_image_metrics(panoptic_segmentation):
         area_por_classe[label_id] += area_segmento
     proporcao_por_classe = {label: area / total_pixels for label, area in area_por_classe.items()}
     contagem_por_classe = Counter([segment["label_id"] for segment in segments_info])
-    areaVerde_ids = [4,9,17,72] #árvore,grama,planta,palmeira
-    proporcao_vegetacao = sum(proporcao_por_classe.get(id, 0) for id in areaVerde_ids)
-
-    return proporcao_por_classe,contagem_por_classe,proporcao_vegetacao
+    return proporcao_por_classe,contagem_por_classe
 
 def export_results(df_proporcoes,df_contagens):
     df_proporcoes["Bairro"] = df_proporcoes.index.str.split("_").str[0]
@@ -76,13 +73,13 @@ def export_results(df_proporcoes,df_contagens):
 
     label_traducao_int = {int(k): v for k, v in id_traducao.items()}
     # Output final de proporções
-    df_prop_completo = df_proporcoes.rename(columns=label_traducao_int) #.to_csv('results/resultadosProp.csv')
-    verticalidade = df_prop_completo.groupby("Bairro")[["predio", "ceu"]].mean().reset_index()
+    df_prop_completo = df_proporcoes.rename(columns=label_traducao_int) 
+    verticalidade = df_prop_completo.groupby("Bairro")[["prédio", "céu"]].mean().reset_index()
     infraDesloc = df_prop_completo.groupby("Bairro")[["estrada", "calçada"]].mean().reset_index()
     areaVerde = df_prop_completo.groupby("Bairro")[["árvore", "grama", "planta", "palmeira"]].mean().reset_index()
     
     # Output final de contagens
-    df_contagem_completo = df_contagens.rename(columns=label_traducao_int) #.to_csv('results/resultadosContagem.csv')
+    df_contagem_completo = df_contagens.rename(columns=label_traducao_int) 
     trafegoCirculacao = df_contagem_completo.groupby("Bairro")[["carro", "pessoa"]].sum().reset_index()
     infraUrbana = df_contagem_completo.groupby("Bairro")[["poste", "placa", "poste de luz"]].sum().reset_index()
 
@@ -94,6 +91,7 @@ def export_results(df_proporcoes,df_contagens):
         areaVerde.to_excel(writer, sheet_name='Área Verde', index=False)
         trafegoCirculacao.to_excel(writer, sheet_name='Tráfego e circulação', index=False)
         infraUrbana.to_excel(writer, sheet_name='Infra urbana', index=False)
+    print("Segmentação concluída com sucesso! Resultados gerados results/results.xlsx")
     return 
 
 
