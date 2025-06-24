@@ -1,7 +1,7 @@
 import sys
 import os
-from src.streetview_downloader import import_coordinates,get_streetview_images
-from src.panoptic_segmentation import generate_results
+from streetview_downloader import import_coordinates,get_streetview_images
+from panoptic_segmentation import generate_results
 
 # -------------------- Execução principal via terminal --------------------
 if __name__ == "__main__":
