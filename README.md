@@ -14,6 +14,9 @@ The repository contains code to:
 Follow the steps below to set up the project on your local machine:
 
 ---
+## Configurações Iniciais
+
+Para executar o projeto, é necessário ter o **Python 3.10 ou superior**, que pode ser baixado no site oficial: [https://www.python.org/downloads/](https://www.python.org/downloads/).
 
 ### 🔗 Clone the repository
 
@@ -34,6 +37,7 @@ python -m venv venv #Create the virtual environment
 ```bash
 .\venv\Scripts\Activate #Activate the virtual environment (Windows)
 ```
+No processo de criação e ativação do ambiente virtual (`venv`), especialmente no sistema operacional **Windows**, é importante garantir que as permissões para execução de scripts estejam habilitadas no **PowerShell**. Caso contrário, a ativação do ambiente pode não funcionar corretamente.
 ```bash
 pip install -r requirements.txt #Install dependencies
 ```
@@ -90,7 +94,7 @@ YOUR_GOOGLE_API_KEY
 Execute the pipeline with the following command:
 
 ```bash
-python run_segmentation.py config.txt
+python src/run_segmentation.py config.txt
 ```
 
 > This will download the images and apply the panoptic segmentation model.
