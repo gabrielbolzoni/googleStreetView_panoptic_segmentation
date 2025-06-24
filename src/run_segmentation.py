@@ -14,7 +14,7 @@ if __name__ == "__main__":
     with open(caminho_api_key, 'r') as f:
         api_key = f.read().strip()
     
-    os.makedirs("/results")
+    os.makedirs("results", exist_ok=True)
     coords_dict = import_coordinates("data/coordinates")
     get_streetview_images(coords_dict, api_key)
     generate_results("data/streetView_images")
